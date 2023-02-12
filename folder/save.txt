@@ -1,0 +1,57 @@
+[global]
+	large readwrite = no
+	debug pid = yes
+	workgroup = ARGNET
+    netbios name = FS01
+    security = domain
+	password server = afs01
+	server string = Serveur de fichiers FS01 (Samba %v) 
+	encrypt passwords = Yes
+	password level = 0
+	username level = 0
+	log level = 0 
+	log file = /var/log/samba/log.smb
+	max log size = 500
+	name resolve order = wins lmhosts bcast
+	time server = Yes
+	wins server = 192.168.1.246
+	load printers = no
+	socket options = TCP_NODELAY IPTOS_LOWDELAY SO_KEEPALIVE SO_RCVBUF=8192 SO_SNDBUF=8192
+    message command = /usr/bin/winpopup %s %f %m %I &
+	getwd cache = Yes
+    preserve case = Yes
+    short preserve case = Yes
+	map to guest = never
+	dos charset = 850
+	idmap config * : backend = ldap:ldap://afs01
+
+[homes]
+	comment = Repertoire personnel
+	read only = No
+	root preexec = /usr/local/bin/makehome "%U" "%G" "%m" "%I"
+	volume = Personnel
+	dos filetimes = yes
+	directory mask = 0711
+	create mask = 0604
+	force directory mode = 0001
+
+[profiles]
+	comment = Repertoire des profiles itinerants
+	root preexec = /usr/local/bin/makeprofile "%U"
+	create mask = 0600
+	directory mask = 0700
+	profile acls = yes
+	read only = No
+	csc policy = disable
+	path = /home/profiles/%U
+        browsable = Yes
+	invalid users = install
+
+[allhomes]
+        comment = Tous les repertoires personnels (Admin)
+        path = /home
+        valid users = +"ARGNET\Domain Admins" jcoenen cpirard
+        admin users = +"ARGNET\Domain Admins" jcoenen cpirard
+        browsable = no
+        read only = no
+
